@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+unsigned long long gcd(unsigned long long a, unsigned long long b) {
+    while (b != 0) {
+        unsigned long long temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+unsigned long long modExp(unsigned long long base, unsigned long long exp, unsigned long long mod) {
+    unsigned long long result = 1;
+    base = base % mod;
+    while (exp > 0) {
+        if (exp % 2 == 1)
+            result = (result * base) % mod;
+        exp = exp >> 1;
+        base = (base * base) % mod;
+    }
+    return result;
+}
+unsigned long long rsaEncrypt(unsigned long long message, unsigned long long e, unsigned long long n) {
+    return modExp(message, e, n);
+}
+unsigned long long rsaDecrypt(unsigned long long cipher, unsigned long long d, unsigned long long n) {
+    return modExp(cipher, d, n);
+}
+int main() {
+    unsigned long long e = 65537;
+    unsigned long long n = 3233;
+    unsigned long long d = 2753;
+
+    char message[100];
+    printf("Enter message (letters A-Z): ");
+    scanf("%s", message);
+    printf("Encrypted message: ");
+    for (int i = 0; message[i] != '\0'; i++) 
+	{
+        unsigned long long m = (message[i] >= 'A' && message[i] <= 'Z') ? message[i] - 'A' : message[i] - 'a';
+        unsigned long long cipher = rsaEncrypt(m, e, n);
+        printf("%llu ", cipher);
+    }
+
+    printf("\n");
+
+    return 0;
+}
