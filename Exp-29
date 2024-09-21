@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#define NUM_LANES 16
+#define CAPACITY_LANES 8
+int has_nonzero_bits(uint64_t lane) {
+    return lane != 0;
+}
+int sha3_nonzero_capacity_lanes(uint64_t state[NUM_LANES]) {
+    int rounds = 0;
+    int all_nonzero = 0;
+    while (!all_nonzero) {
+        all_nonzero = 1;
+        rounds++;
+        for (int i = 0; i < NUM_LANES; i++) {
+            state[i] |= (rand() % 0xFFFFFFFFFFFFFFFF);
+        }
+        for (int i = 0; i < CAPACITY_LANES; i++) {
+            if (!has_nonzero_bits(state[i])) {
+                all_nonzero = 0;
+                break;
+            }
+        }
+    }
+    
+    return rounds;
+}
+
+int main() 
+{
+    uint64_t state[NUM_LANES] = {0};
+    int rounds = sha3_nonzero_capacity_lanes(state);
+    printf("It took %d rounds for all capacity lanes to have at least one non-zero bit.\n", rounds);
+
+    return 0;
+}
