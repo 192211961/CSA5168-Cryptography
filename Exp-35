@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+void encrypt(char* plaintext, int* key, char* ciphertext, int length) {
+    for(int i = 0; i < length; i++) {
+        ciphertext[i] = ((plaintext[i] - 'A' + key[i]) % 26) + 'A';
+    }
+}
+
+void decrypt(char* ciphertext, int* key, char* decryptedtext, int length) {
+    for(int i = 0; i < length; i++) {
+        decryptedtext[i] = ((ciphertext[i] - 'A' - key[i] + 26) % 26) + 'A';
+    }
+}
+
+void generateKey(int* key, int length) {
+    for(int i = 0; i < length; i++) {
+        key[i] = rand() % 26;
+    }
+}
+
+int main() {
+    srand(time(0));
+    char plaintext[] = "HELLOWORLD";
+    int length = strlen(plaintext);
+    int key[length];
+    char ciphertext[length+1];
+    char decryptedtext[length+1];
+
+    generateKey(key, length);
+    encrypt(plaintext, key, ciphertext, length);
+    ciphertext[length] = '\0';
+    decrypt(ciphertext, key, decryptedtext, length);
+    decryptedtext[length] = '\0';
+
+    printf("Plaintext: %s\n", plaintext);
+    printf("Ciphertext: %s\n", ciphertext);
+    printf("Decrypted: %s\n", decryptedtext);
+    return 0;
+}
