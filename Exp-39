@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <string.h>
+
+char englishFreq[] = "ETAOINSHRDLCUMWFGYPBVKJXQZ";
+
+void calculateFrequency(char* ciphertext, int* freq) {
+    for (int i = 0; i < 26; i++) freq[i] = 0;
+    for (int i = 0; ciphertext[i] != '\0'; i++) {
+        if (ciphertext[i] >= 'A' && ciphertext[i] <= 'Z') {
+            freq[ciphertext[i] - 'A']++;
+        }
+    }
+}
+
+void generatePlaintext(char* ciphertext, char* plaintext, int shift) {
+    for (int i = 0; ciphertext[i] != '\0'; i++) {
+        if (ciphertext[i] >= 'A' && ciphertext[i] <= 'Z') {
+            plaintext[i] = ((ciphertext[i] - 'A' - shift + 26) % 26) + 'A';
+        } else {
+            plaintext[i] = ciphertext[i];
+        }
+    }
+    plaintext[strlen(ciphertext)] = '\0';
+}
+
+void sortFrequencies(int* freq, char* letters) {
+    for (int i = 0; i < 26; i++) letters[i] = 'A' + i;
+    for (int i = 0; i < 25; i++) {
+        for (int j = i + 1; j < 26; j++) {
+            if (freq[i] < freq[j]) {
+                int temp = freq[i];
+                freq[i] = freq[j];
+                freq[j] = temp;
+                char tmpChar = letters[i];
+                letters[i] = letters[j];
+                letters[j] = tmpChar;
+            }
+        }
+    }
+}
+
+void attack(char* ciphertext, int topN) {
+    int freq[26];
+    char letters[26];
+    calculateFrequency(ciphertext, freq);
+    sortFrequencies(freq, letters);
+
+    for (int i = 0; i < topN; i++) {
+        int shift = (letters[0] - englishFreq[i] + 26) % 26;
+        char plaintext[strlen(ciphertext) + 1];
+        generatePlaintext(ciphertext, plaintext, shift);
+        printf("Possible Plaintext #%d: %s\n", i + 1, plaintext);
+    }
+}
+
+int main() {
+    char ciphertext[] = "LIPPSASVPH";
+    int topN = 10;
+    attack(ciphertext, topN);
+    return 0;
+}
