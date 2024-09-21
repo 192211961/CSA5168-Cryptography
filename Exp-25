@@ -1,0 +1,27 @@
+#include <stdio.h>
+unsigned long long gcd(unsigned long long a, unsigned long long b) 
+{
+    while (b != 0) {
+        unsigned long long t = b;
+        b = a % b;
+        a = t;
+    }
+    return a;
+}
+int main() {
+    unsigned long long m, n;
+    printf("Enter the plaintext block m: ");
+    scanf("%llu", &m);
+    
+    printf("Enter the modulus n (product of primes p and q): ");
+    scanf("%llu", &n);
+    unsigned long long common_factor = gcd(m, n);
+    if (common_factor > 1 && common_factor < n) 
+	{
+        printf("Common factor found: %llu\n", common_factor);
+        printf("The other prime factor is: %llu\n", n / common_factor);
+    } else {
+        printf("No common factor found.\n");
+    }
+    return 0;
+}
