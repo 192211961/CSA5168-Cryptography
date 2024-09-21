@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+void generate_random_message(char *message, size_t length) {
+    static const char alphanum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    for (size_t i = 0; i < length - 1; ++i) {
+        message[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+    message[length - 1] = '\0';
+}
+void sign_rsa(const char *message, char *signature) 
+{
+    snprintf(signature, 256, "RSA-SIGN(%s)", message);
+}
+
+void sign_dsa(const char *message, char *signature, int sign_number) 
+{
+    snprintf(signature, 256, "DSA-SIGN(%s-%d)", message, sign_number);
+}
+
+int main() 
+{
+    srand((unsigned int)time(NULL));
+    char message[64];
+    generate_random_message(message, sizeof(message));
+    char rsa_signature[256];
+    sign_rsa(message, rsa_signature);
+    char dsa_signature1[256];
+    char dsa_signature2[256];
+    sign_dsa(message, dsa_signature1, 1);
+    sign_dsa(message, dsa_signature2, 2);
+    printf("Message: %s\n", message);
+    printf("RSA Signature: %s\n", rsa_signature);
+    printf("DSA Signature 1: %s\n", dsa_signature1);
+    printf("DSA Signature 2: %s\n", dsa_signature2);
+
+    return 0;
+}
