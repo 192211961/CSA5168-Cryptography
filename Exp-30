@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#define BLOCK_SIZE 16
+void xor_blocks(uint8_t *result, const uint8_t *block1, const uint8_t *block2) {
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+    	
+        result[i] = block1[i] ^ block2[i];
+    }
+}
+void encrypt_block(uint8_t *cipher, const uint8_t *plain, const uint8_t *key) 
+{
+    xor_blocks(cipher, plain, key);
+}
+void compute_cbc_mac(uint8_t *mac, const uint8_t *key, const uint8_t *message) 
+{
+    encrypt_block(mac, message, key);
+}
+void compute_cbc_mac_two_blocks(uint8_t *mac, const uint8_t *key, const uint8_t *message, const uint8_t *mac_T) {
+    uint8_t intermediate[BLOCK_SIZE];
+    uint8_t xor_result[BLOCK_SIZE];
+    encrypt_block(intermediate, message, key);
+    
+    xor_blocks(xor_result, message, mac_T);
+    encrypt_block(mac, xor_result, intermediate);
+}
+
+int main() 
+{
+    uint8_t key[BLOCK_SIZE] = {0x00};
+    uint8_t message[BLOCK_SIZE] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10};  // Example message
+    uint8_t mac_T[BLOCK_SIZE];
+    uint8_t final_mac[BLOCK_SIZE];
+    compute_cbc_mac(mac_T, key, message);
+    printf("CBC-MAC T for message X: ");
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+        printf("%02x ", mac_T[i]);
+    }
+    printf("\n");
+    compute_cbc_mac_two_blocks(final_mac, key, message, mac_T);
+    printf("CBC-MAC for two-block message X || (X ? T): ");
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+        printf("%02x ", final_mac[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
