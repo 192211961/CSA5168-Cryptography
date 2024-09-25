@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<string.h>
+#include<cmath>
+int main()
+{
+	int p=3;
+	int q=5;
+	int n,q1,d,e,i;
+    n=p*q;
+    printf("n value is %d\n",n);
+    q1=(p-1)*(q-1);
+    printf("q value is %d\n",q1);
+    for(i=2;i<q1;i++)
+    {
+    	if(q1%i!=0)
+    	{
+    		e=i;
+    		break;
+		}
+	}
+	printf("e value is %d\n",e);
+	for(i=2;i<q1;i++)
+	{
+		if((e*i)%q1==1)
+		
+		{
+			d=i;
+			break;
+		}
+	}
+	printf("d is %d\n",d);
+	int pt=8;
+	int en,dn;
+	int m=pow(pt,e);
+     en=m%n;
+	 printf("encryption value is %d\n",en);
+	 int m1=pow(m,d);
+	 dn=m1%n;
+	 printf("decryption is %d\n",dn);		
+}
