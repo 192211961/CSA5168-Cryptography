@@ -1,0 +1,32 @@
+#include<stdio.h>
+#include<cmath>
+int main()
+{
+	int n=7,a=3;
+	int xs,xr;
+	int ys,yr;
+	int ks,kr;
+	printf("enter the private key of sender\n");
+	scanf("%d",&xs);
+	printf("enter the private key of receiver\n");
+	scanf("%d",&xr);
+	int a1=pow(a,xs);
+	ys=a1 % n;
+	int b=pow(a,xr);
+	yr=b % n;
+	printf("public key of sender is:%d\n",ys);
+	printf("public key of reciever is:%d\n",yr);
+	int c=pow(yr,xs);
+	int d=pow(ys,xr);
+	ks=c % n;
+	kr=d % n;
+	if(ks == kr)
+	{
+		printf("secret key of the sender and reciever is:%d\n",ks);
+	}
+	else
+	{
+		printf("secret key is not generated");
+	}
+	return 0;
+}
