@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <string.h>
+int main() 
+{
+    unsigned int a[2][2] = { { 3, 3 }, { 2, 5 } };
+    unsigned int b[2][2] = { { 15, 17 }, { 20, 9 } };
+    unsigned int c[20], d[20];
+    char msg[20];
+    int i, j, t;
+    printf("Enter plain text (multiple of 2 characters recommended): ");
+    scanf("%s", msg);
+    int len = strlen(msg);
+    if (len % 2 != 0) 
+	{
+        msg[len] = 'X';
+        msg[len + 1] = '\0';
+        len++;
+    }
+    printf("\nOriginal Plaintext: %s\n", msg);
+    for (int k = 0; k < len; k += 2) 
+	{
+        for (i = 0; i < 2; i++) 
+		{
+            c[i] = msg[k + i] - 'A';
+        }
+        for (i = 0; i < 2; i++) 
+		{
+            t = 0;
+            for (j = 0; j < 2; j++) {
+                t += a[i][j] * c[j];
+            }
+            d[i] = t % 26;
+        }
+        printf("Encrypted Cipher Text: ");
+        for (i = 0; i < 2; i++) {
+            printf("%c", d[i] + 'A');
+        }
+        printf("\n");
+        for (i = 0; i < 2; i++) {
+            t = 0;
+            for (j = 0; j < 2; j++) {
+                t += b[i][j] * d[j];
+            }
+            c[i] = t % 26;
+        }
+        printf("Decrypted Cipher Text: ");
+        for (i = 0; i < 2; i++) {
+            printf("%c", c[i] + 'A');
+        }
+        printf("\n");
+    }
+    return 0;
+}
